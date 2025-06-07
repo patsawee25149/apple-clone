@@ -9,9 +9,14 @@ import { FloatingInput } from '@/app/context/FloatingInput';
 export default function SignUp() {
   const router = useRouter();
   const [formData, setFormData] = useState({
+    name: '',
+    lastname: '',
+    country: '',
+    birthday: '',
     email: '',
     password: '',
     confirmPassword: '',
+    phone: '',
   });
   const [error, setError] = useState('');
 
@@ -31,6 +36,8 @@ export default function SignUp() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: formData.name,
+          lastname: formData.lastname,
           email: formData.email,
           password: formData.password,
         }),
@@ -50,15 +57,50 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 ">
+    <div className="min-h-screen flex justify-center bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full ">
         <div>
           <h2 className="mt-10 text-center text-3xl font-extrabold text-gray-700">
             สร้างบัญชี Apple ของคุณ
           </h2>
         </div>
         <form
-          className="mt-8 space-y-10 justify-center items-center"
+          className="space-y-8 justify-center items-center"
+          onSubmit={handleSubmit}
+        >
+          <div className="mt-10 flex flex-col-2 w-full space-y-6 space-x-4">
+            <FloatingInput
+              id="name"
+              label="ชื่อ"
+              type="text"
+              value={formData.name}
+              onChange={(value) => setFormData({ ...formData, name: value })}
+              required
+              autoComplete="name"
+            />
+
+            <FloatingInput
+              id="lastname"
+              label="นามสกุล"
+              type="text"
+              value={formData.lastname}
+              onChange={(value) =>
+                setFormData({ ...formData, lastname: value })
+              }
+              required
+              autoComplete="lastname"
+            />
+          </div>
+          <select
+            className="w-full px-4 pt-6 pb-2 border border-gray-300 rounded-lg text-base bg-transparent outline-none transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 peer floating-input"
+            id=""
+            value={formData.country}
+          >
+            ประเทศ/ภูมิภาค
+          </select>
+        </form>
+        <form
+          className="space-y-10 justify-center items-center"
           onSubmit={handleSubmit}
         >
           {error && (
@@ -72,7 +114,7 @@ export default function SignUp() {
               value={formData.email}
               onChange={(value) => setFormData({ ...formData, email: value })}
               required
-              autoComplete="username"
+              autoComplete="email"
             />
 
             <FloatingInput
@@ -137,4 +179,3 @@ export default function SignUp() {
     </div>
   );
 }
-//         </form>
