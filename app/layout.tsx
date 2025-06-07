@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Header from "./Navbar/page";
+import { Prompt } from 'next/font/google'
+import { MenuProvider } from "./context/MenuContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const prompt = Prompt({
+  subsets: ['thai', 'latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-prompt',
+  display: 'swap', // เพิ่มบรรทัดนี้
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,11 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="th" className={prompt.variable}> {/* เปลี่ยนตรงนี้ */}
+
+     <body className={prompt.className}> {/* เปลี่ยนตรงนี้ */}
+     <MenuProvider>
+        <Header />
         {children}
+      </MenuProvider>
       </body>
     </html>
   );
