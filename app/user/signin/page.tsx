@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { FloatingInput } from '@/app/context/FloatingInput'; // adjust path as needed
+import { FloatingInput } from '@/app/function/FloatingInput'; // adjust path as needed
 import Link from 'next/link';
 
 export default function Signin() {

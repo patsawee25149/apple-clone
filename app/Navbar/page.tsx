@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import DropdownMenu from './dropdown';
-import { useMenu } from '../context/MenuContext';
+import { useMenu } from '../function/MenuContext';
 import Link from 'next/link';
 import { GrShop } from 'react-icons/gr';
 import { CiSearch } from 'react-icons/ci';
