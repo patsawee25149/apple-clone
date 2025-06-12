@@ -310,7 +310,7 @@ export default function MainPage() {
       </div>
 
       {/*Service Scroll area */}
-      <div className="relative  mt-[150px] w-full ">
+      <div className="relative  mt-[150px] w-full scroll-smooth">
         <h2 className="text-stone-500 text-4xl mb-10 ml-[150px]">
           <span className="text-black">ความช่วยเหลืออยู่ที่นี่ </span>{' '}
           ไม่ว่าเมื่อไหร่หรือแบบไหนที่คุณต้องการ
@@ -344,7 +344,7 @@ export default function MainPage() {
                 <img
                   src={card.img}
                   alt={card.title}
-                  className="object-cover w-full h-full transition-transform duration-300 "
+                  className="object-cover w-full h-full transition-transform duration-400 hover:scale-105"
                 />
                 <div className="absolute top-0 left-0 w-full bg-gradient-to-t to-transparent p-4 text-black">
                   <p className={`text-sm pb-4 text-gray-500`}>{card.title}</p>

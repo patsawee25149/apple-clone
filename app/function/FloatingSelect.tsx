@@ -30,7 +30,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
         id={id}
         value={value}
         onChange={handleSelectChange}
-        className="w-full px-15 pt-6 pb-2 border border-gray-300 rounded-lg text-base bg-white outline-none transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 peer appearance-none cursor-pointer"
+        className="w-full pl-4 pt-6 pb-2 border border-gray-300 rounded-lg text-base bg-white outline-none transition-all duration-300 focus:border-blue-500 focus:ring-2 relative focus:ring-blue-100 peer appearance-none cursor-pointer"
         required={required}
       >
         <option value="" disabled hidden></option>

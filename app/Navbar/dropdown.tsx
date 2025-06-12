@@ -38,7 +38,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             : "opacity-0 -translate-y-3 pointer-events-none"
         }`}
       >
-        <div className={`max-w-screen-xl pl-[250px] py-6 grid grid-cols-3 items-start text-black ${
+        <div className={`max-w-screen-xl pl-[680px] py-6 grid grid-cols-3 items-start text-black ${
           id === "cart" ? "pb-16" : ""
         }`}>
           {/* Column 1 */}

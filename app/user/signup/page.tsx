@@ -14,14 +14,17 @@ export default function SignUp() {
   const [formData, setFormData] = useState({
     name: '',
     lastname: '',
-    country: '',
-    birthday: '',
+    country: 'ประเทศไทย',
+    dates: '',
+    months : '',
+    years: '',
     email: '',
     password: '',
     confirmPassword: '',
     phone: '',
   });
   const [error, setError] = useState('');
+  
 
   // ข
 
@@ -47,7 +50,10 @@ export default function SignUp() {
           email: formData.email,
           password: formData.password,
           phone: formData.phone,
-          birthday: formData.birthday,
+          dates: formData.dates,
+          months: formData.months,
+          years: formData.years,
+          birthday: `${formData.dates}-${formData.months}-${formData.years}`,
         }),
       });
 
@@ -119,36 +125,36 @@ export default function SignUp() {
 
           {/* วันเกิด */}
 
-          <div className="flex flex-col-3 w-full space-x-10 space-y-4 sm:space-y-0 sm:flex-row sm:space-x-4">
+          <div className="grid grid-cols-3 space-y-4 gap-4 sm:space-y-0 sm:flex-row sm:space-x-4">
             <FloatingSelect
-              id="birthday"
+              id="dates"
               label="วัน"
               options={dates}
-              value={formData.birthday}
+              value={formData.dates}
               onChange={(value) =>
-                setFormData({ ...formData, birthday: value })
+                setFormData({ ...formData, dates: value })
               }
               required
             />
 
             <FloatingSelect
-              id="birthday"
+              id="months"
               label="เดือน"
               options={months}
-              value={formData.birthday}
+              value={formData.months}
               onChange={(value) =>
-                setFormData({ ...formData, birthday: value })
+                setFormData({ ...formData, months: value })
               }
               required
             />
 
             <FloatingSelect
-              id="birthday"
+              id="years"
               label="ปี"
               options={years}
-              value={formData.birthday}
+              value={formData.years}
               onChange={(value) =>
-                setFormData({ ...formData, birthday: value })
+                setFormData({ ...formData, years: value })
               }
               required
             />
