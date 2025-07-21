@@ -1,0 +1,223 @@
+
+.header {
+  @apply w-full z-50 relative bg-gray-50 border-b border-gray-200;
+}
+
+.container {
+  @apply max-w-screen-xl mx-auto px-4;
+}
+
+.container-lg {
+  @apply lg:px-8;
+}
+
+/* Mobile Styles */
+.mobile-header {
+  @apply flex items-center justify-between py-4;
+}
+
+.mobile-only {
+  @apply lg:hidden;
+}
+
+.mobile-menu-button {
+  @apply p-2 rounded-md hover:bg-gray-100 transition-colors;
+}
+
+.mobile-logo {
+  @apply text-xl font-bold;
+}
+
+.mobile-icons {
+  @apply flex items-center space-x-4;
+}
+
+.mobile-icon {
+  @apply cursor-pointer hover:text-blue-500 transition-colors;
+}
+
+.mobile-search-icon {
+  @apply text-2xl;
+}
+
+.mobile-cart-icon {
+  @apply text-xl;
+}
+
+/* Mobile Menu Overlay */
+.mobile-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+}
+
+.mobile-menu-panel {
+  @apply bg-white w-80 h-full overflow-y-auto;
+}
+
+.mobile-menu-content {
+  @apply p-4;
+}
+
+.mobile-menu-header {
+  @apply flex justify-between items-center mb-6;
+}
+
+.mobile-menu-title {
+  @apply text-xl font-bold;
+}
+
+.mobile-search-form {
+  @apply mb-6;
+}
+
+.mobile-search-container {
+  @apply flex items-center bg-gray-100 rounded-lg p-3;
+}
+
+.mobile-search-icon-form {
+  @apply text-xl text-gray-500 mr-2;
+}
+
+.mobile-search-input {
+  @apply flex-1 bg-transparent outline-none;
+}
+
+.mobile-nav {
+  @apply space-y-4;
+}
+
+.mobile-nav-section {
+  @apply border-b pb-4;
+}
+
+.mobile-nav-title {
+  @apply font-semibold mb-2;
+}
+
+.mobile-nav-list {
+  @apply space-y-2 ml-4;
+}
+
+.mobile-nav-link {
+  @apply text-gray-600 hover:text-blue-500 transition-colors;
+}
+
+.mobile-nav-link-with-icon {
+  @apply flex items-center text-gray-600 hover:text-blue-500 transition-colors;
+}
+
+.mobile-nav-icon {
+  @apply mr-2;
+}
+
+/* Tablet Styles */
+.tablet-header {
+  @apply hidden md:flex lg:hidden items-center justify-between py-4;
+}
+
+.tablet-logo {
+  @apply text-xl font-bold;
+}
+
+.tablet-nav {
+  @apply flex items-center space-x-6;
+}
+
+.tablet-nav-link {
+  @apply hover:text-blue-500 transition-colors;
+}
+
+.tablet-icons {
+  @apply flex items-center space-x-4;
+}
+
+.tablet-icon {
+  @apply cursor-pointer hover:text-blue-500 transition-colors;
+}
+
+.tablet-search-icon {
+  @apply text-2xl;
+}
+
+.tablet-cart-icon {
+  @apply text-xl;
+}
+
+/* Desktop Styles */
+.desktop-header {
+  @apply hidden lg:flex items-center justify-between py-5;
+}
+
+.desktop-logo {
+  @apply text-xl font-bold;
+}
+
+.desktop-nav {
+  @apply hidden lg:flex items-center space-x-6;
+}
+
+.desktop-nav-xl {
+  @apply xl:space-x-8;
+}
+
+.desktop-search-icon {
+  @apply text-2xl cursor-pointer;
+}
+
+.desktop-cart-icon {
+  @apply text-xl cursor-pointer;
+}
+
+/* Search Form Styles */
+.search-form {
+  @apply w-full;
+}
+
+.search-container {
+  @apply flex items-center;
+}
+
+.search-icon {
+  @apply text-2xl text-gray-500 mr-2;
+}
+
+.search-input {
+  @apply flex-1 px-3 py-2 text-sm border rounded-md outline-none focus:border-blue-500 transition-colors;
+}
+
+/* Menu Item Styles */
+.menu-item-with-icon {
+  @apply flex items-center;
+}
+
+.menu-icon {
+  @apply mr-2 inline;
+}
+
+.cart-signin-text {
+  @apply text-sm text-gray-500;
+}
+
+.cart-signin-link {
+  @apply text-blue-500 underline;
+}
+
+.cart-profile-text {
+  @apply text-gray-500;
+}
+
+/* Utility Classes */
+.icon-lg {
+  @apply text-2xl;
+}
+
+.icon-md {
+  @apply text-xl;
+}
+
+.hover-blue {
+  @apply hover:text-blue-500 transition-colors;
+}
+
+.btn-close {
+  @apply p-1 rounded hover:bg-gray-100;
+}

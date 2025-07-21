@@ -3,6 +3,7 @@ import './globals.css';
 import Header from './Navbar/page';
 import { Prompt } from 'next/font/google';
 import { MenuProvider } from './function/MenuContext';
+import Footer from './Navbar/footer';
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -23,14 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th" className={prompt.variable}>
-      {' '}
-      {/* เปลี่ยนตรงนี้ */}
       <body className={prompt.className}>
-        {' '}
-        {/* เปลี่ยนตรงนี้ */}
         <MenuProvider>
           <Header />
           {children}
+          <Footer />
         </MenuProvider>
       </body>
     </html>
