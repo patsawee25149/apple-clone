@@ -7,7 +7,7 @@ interface DropdownMenuProps {
   label: React.ReactNode;
   id: string;
   header: { label: string; href?: string }[];
-  rows1: { label: React.ReactNode; href?: string }[];
+  rows1: { label: React.ReactNode; href?: string  }[];
   rows2: { label: React.ReactNode; href?: string }[];
   rows3: { label: React.ReactNode; href?: string }[];
   activeMenu: string | null;
