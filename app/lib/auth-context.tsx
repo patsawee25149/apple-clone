@@ -1,147 +1,73 @@
 'use client';
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-
-interface User {
-  id: string;
-  name: string;
-  lastname: string;
-  email: string;
-  country: string;
-  phone?: string;
-}
+import { createContext, useContext, useEffect, useState } from 'react';
+import { User } from '@/app/types/user';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (emailOrPhone: string, password: string) => Promise<void>;
-  signup: (userData: SignupData) => Promise<void>;
+  rememberMe: boolean;
+  login: (user: User, rememberMe?: boolean) => void;
   logout: () => Promise<void>;
-}
-
-interface SignupData {
-  name: string;
-  lastname: string;
-  email: string;
-  password: string;
-  phone?: string;
-  country: string;
-  dates: string;
-  months: string;
-  years: string;
+  updateProfile: (updatedUser: User) => void; // ⭐ เพิ่มฟังก์ชันอัปเดต
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
 
-  // Check if user is logged in on mount
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch('/api/auth/me', {
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      }
-    } catch (error) {
-      console.error('Auth check failed:', error);
-    } finally {
-      setLoading(false);
-    }
+  const login = (userData: User, remember: boolean = false) => {
+    setUser(userData);
+    setRememberMe(remember);
   };
 
-  const login = async (emailOrPhone: string, password: string) => {
-    try {
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ emailOrPhone, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'การเข้าสู่ระบบล้มเหลว');
-      }
-
-      setUser(data.user);
-      
-      // Redirect to home page
-      window.location.href = '/';
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const signup = async (userData: SignupData) => {
-    try {
-      const birthday = `${userData.dates}-${userData.months}-${userData.years}`;
-      
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          ...userData,
-          birthday
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'การสมัครสมาชิกล้มเหลว');
-      }
-
-      setUser(data.user);
-      
-      // Redirect to home page
-      window.location.href = '/';
-    } catch (error) {
-      throw error;
-    }
+  // ⭐ ฟังก์ชันอัปเดตข้อมูล user
+  const updateProfile = (updatedUser: User) => {
+    setUser(updatedUser);
   };
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      
+      await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
-      window.location.href = '/';
+      setRememberMe(false);
+      window.location.href = '/user/signin';
     } catch (error) {
       console.error('Logout error:', error);
-      // Still clear user state even if request fails
-      setUser(null);
-      window.location.href = '/';
     }
   };
 
-  const value = {
-    user,
-    loading,
-    login,
-    signup,
-    logout,
-  };
+  // ⭐ ตรวจสอบสถานะ auth เมื่อ app โหลด
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+          setRememberMe(data.rememberMe || false);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading, 
+      rememberMe, 
+      login, 
+      logout, 
+      updateProfile // ⭐ เพิ่มฟังก์ชันใน context
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,6 +5,7 @@ import Header from './Navbar/page';
 import { Prompt } from 'next/font/google';
 import { MenuProvider } from './function/MenuContext';
 import { AuthProvider } from './lib/auth-context';
+import Footer from './Navbar/footer';
 
 const prompt = Prompt({
   subsets: ['thai', 'latin'],
@@ -30,6 +31,7 @@ export default function RootLayout({
           <MenuProvider>
             <Header />
             {children}
+            <Footer />
           </MenuProvider>
         </AuthProvider>
       </body>

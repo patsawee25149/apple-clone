@@ -1,28 +1,28 @@
 // app/Navbar/page.tsx
-'use client';
-import React, { useState } from 'react';
-import DropdownMenu from './dropdown';
-import { useMenu } from '../function/MenuContext';
-import { useAuth } from '../lib/auth-context';
-import Link from 'next/link';
-import { GrShop } from 'react-icons/gr';
-import { CiSearch } from 'react-icons/ci';
-import { GoArrowRight } from 'react-icons/go';
-import { FiBox } from 'react-icons/fi';
-import { VscHeart } from 'react-icons/vsc';
-import { CiSettings } from 'react-icons/ci';
-import { FiUser } from 'react-icons/fi';
-import { BiLogOut } from 'react-icons/bi';
+"use client";
+import React, { useState } from "react";
+import DropdownMenu from "./dropdown";
+import { useMenu } from "../function/MenuContext";
+import { useAuth } from "../lib/auth-context";
+import Link from "next/link";
+import { GrShop } from "react-icons/gr";
+import { CiSearch } from "react-icons/ci";
+import { GoArrowRight } from "react-icons/go";
+import { FiBox } from "react-icons/fi";
+import { VscHeart } from "react-icons/vsc";
+import { CiSettings } from "react-icons/ci";
+import { FiUser } from "react-icons/fi";
+import { BiLogOut } from "react-icons/bi";
 
 export default function Header() {
   const { activeMenu, setActiveMenu } = useMenu();
   const { user, logout, loading } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      console.log('Searching for:', searchQuery);
+      console.log("Searching for:", searchQuery);
       window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
     }
   };
@@ -31,7 +31,7 @@ export default function Header() {
     try {
       await logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -39,11 +39,7 @@ export default function Header() {
   const getCartDropdownContent = () => {
     if (loading) {
       return {
-        header: [
-          { label: 'กำลังโหลด...' },
-          { label: ' ' },
-          { label: ' ' },
-        ],
+        header: [{ label: "กำลังโหลด..." }, { label: " " }, { label: " " }],
         rows1: [
           {
             label: (
@@ -60,20 +56,20 @@ export default function Header() {
     if (!user) {
       return {
         header: [
-          { label: 'ถุงของคุณว่างเปล่า' },
-          { label: ' ' },
-          { label: ' ' },
+          { label: "ถุงของคุณว่างเปล่า" },
+          { label: " " },
+          { label: " " },
         ],
         rows1: [
           {
             label: (
-              <span className="text-[14px] text-gray-500 bottom-6 relative">
+              <span className="text-[14px] text-gray-500 bottom-1 right-20 relative">
                 <Link
                   href="/user/signin"
                   className="text-blue-500 underline text-[14px]"
                 >
                   ลงชื่อเข้าใช้
-                </Link>{' '}
+                </Link>{" "}
                 เพื่อดูว่าคุณมีรายการที่บันทึกไว้หรือไม่
               </span>
             ),
@@ -86,7 +82,7 @@ export default function Header() {
                 ลงชื่อเข้าใช้
               </>
             ),
-            href: '/user/signin',
+            href: "/user/signin",
           },
           {
             label: (
@@ -95,7 +91,7 @@ export default function Header() {
                 สร้างบัญชีใหม่
               </>
             ),
-            href: '/user/signup',
+            href: "/user/signup",
           },
         ],
       };
@@ -104,13 +100,13 @@ export default function Header() {
     return {
       header: [
         { label: `สวัสดี ${user.name}` },
-        { label: ' ' },
-        { label: ' ' },
+        { label: " " },
+        { label: " " },
       ],
       rows1: [
         {
           label: (
-            <span className="text-[14px] text-gray-700 bottom-6 relative">
+            <span className="text-[14px] text-gray-700 right-20 relative">
               ยินดีต้อนรับ, {user.name} {user.lastname}
             </span>
           ),
@@ -123,7 +119,7 @@ export default function Header() {
               โปรไฟล์ของฉัน
             </>
           ),
-          href: '/profile',
+          href: "/profile",
         },
         {
           label: (
@@ -132,7 +128,7 @@ export default function Header() {
               คำสั่งซื้อ
             </>
           ),
-          href: '/orders',
+          href: "/orders",
         },
         {
           label: (
@@ -141,7 +137,7 @@ export default function Header() {
               บันทึกของคุณ
             </>
           ),
-          href: '/wishlist',
+          href: "/wishlist",
         },
         {
           label: (
@@ -150,19 +146,17 @@ export default function Header() {
               ตั้งค่าบัญชี
             </>
           ),
-          href: '/settings',
+          href: "/settings",
         },
         {
           label: (
-            <button
-              onClick={handleLogout}
-              className="flex text-red-600 hover:text-red-700 transition-colors"
-            >
-              <BiLogOut className="relative mr-2 top-1" />
-              ออกจากระบบ {user.name}
-            </button>
+            <>
+              <BiLogOut className="relative mr-2 top-1 " />
+              ออกจากระบบ {user.name} {user.lastname}
+            </>
           ),
           href: undefined,
+          onClick: handleLogout, // ⭐ ใช้ onClick prop แทน
         },
       ],
     };
@@ -182,28 +176,28 @@ export default function Header() {
             id="iphone"
             label="iPhone"
             header={[
-              { label: 'ดูข้อมูล iPhone' },
-              { label: 'เลือกซื้อ iPhone' },
-              { label: 'อีกมากมายจาก iPhone' },
+              { label: "ดูข้อมูล iPhone" },
+              { label: "เลือกซื้อ iPhone" },
+              { label: "อีกมากมายจาก iPhone" },
             ]}
             rows1={[
-              { label: 'ดูข้อมูล iPhone ทั้งหมด', href: '/iphone' },
-              { label: 'iPhone 16', href: '/iphone-16' },
-              { label: 'iPhone 16 Pro', href: '/iphone-16-pro' },
-              { label: 'iPhone 16 Pro Max', href: '/iphone-16-pro-max' },
-              { label: 'iPhone 16 Plus', href: '/iphone-16-plus' },
+              { label: "ดูข้อมูล iPhone ทั้งหมด", href: "/iphone" },
+              { label: "iPhone 16", href: "/iphone-16" },
+              { label: "iPhone 16 Pro", href: "/iphone-16-pro" },
+              { label: "iPhone 16 Pro Max", href: "/iphone-16-pro-max" },
+              { label: "iPhone 16 Plus", href: "/iphone-16-plus" },
             ]}
             rows2={[
-              { label: 'เลือกซื้อ iPhone', href: '/iphone' },
-              { label: 'อุปกรณ์เสริม iPhone', href: '/iphone/accessories' },
+              { label: "เลือกซื้อ iPhone", href: "/iphone" },
+              { label: "อุปกรณ์เสริม iPhone", href: "/iphone/accessories" },
             ]}
             rows3={[
               {
-                label: 'บริการช่วยเหลือสำหรับ iPhone',
-                href: '/support/iphone',
+                label: "บริการช่วยเหลือสำหรับ iPhone",
+                href: "/support/iphone",
               },
-              { label: 'AppleCare+ สำหรับ iPhone', href: '/support/iphone' },
-              { label: 'Apple Music', href: '/apple-music' },
+              { label: "AppleCare+ สำหรับ iPhone", href: "/support/iphone" },
+              { label: "Apple Music", href: "/apple-music" },
             ]}
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
@@ -213,24 +207,24 @@ export default function Header() {
             id="mac"
             label="Mac"
             header={[
-              { label: 'ดูข้อมูล Mac' },
-              { label: 'เลือกซื้อ Mac' },
-              { label: 'อีกมากมายจาก Mac' },
+              { label: "ดูข้อมูล Mac" },
+              { label: "เลือกซื้อ Mac" },
+              { label: "อีกมากมายจาก Mac" },
             ]}
             rows1={[
-              { label: 'ดูข้อมูล Mac ทั้งหมด', href: '/mac' },
-              { label: 'MacBook Air', href: '/macbook-air' },
-              { label: 'MacBook Pro', href: '/macbook-pro' },
-              { label: 'Mac mini', href: '/mac-mini' },
+              { label: "ดูข้อมูล Mac ทั้งหมด", href: "/mac" },
+              { label: "MacBook Air", href: "/macbook-air" },
+              { label: "MacBook Pro", href: "/macbook-pro" },
+              { label: "Mac mini", href: "/mac-mini" },
             ]}
             rows2={[
-              { label: 'เลือกซื้อ Mac', href: '/mac' },
-              { label: 'อุปกรณ์เสริม Mac', href: '/mac/accessories' },
+              { label: "เลือกซื้อ Mac", href: "/mac" },
+              { label: "อุปกรณ์เสริม Mac", href: "/mac/accessories" },
             ]}
             rows3={[
-              { label: 'บริการช่วยเหลือสำหรับ Mac', href: '/support/mac' },
-              { label: 'AppleCare+ สำหรับ Mac', href: '/support/mac' },
-              { label: 'Apple Music', href: '/apple-music' },
+              { label: "บริการช่วยเหลือสำหรับ Mac", href: "/support/mac" },
+              { label: "AppleCare+ สำหรับ Mac", href: "/support/mac" },
+              { label: "Apple Music", href: "/apple-music" },
             ]}
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
@@ -240,24 +234,24 @@ export default function Header() {
             id="watch"
             label="Watch"
             header={[
-              { label: 'ดูข้อมูล Watch' },
-              { label: 'เลือกซื้อ Watch' },
-              { label: 'อีกมากมายจาก Watch' },
+              { label: "ดูข้อมูล Watch" },
+              { label: "เลือกซื้อ Watch" },
+              { label: "อีกมากมายจาก Watch" },
             ]}
             rows1={[
-              { label: 'ดูข้อมูล Watch ทั้งหมด', href: '/watch' },
-              { label: 'Apple Watch Series 9', href: '/apple-watch-9' },
-              { label: 'Ultra 2', href: '/ultra-2' },
-              { label: 'Bands', href: '/bands' },
+              { label: "ดูข้อมูล Watch ทั้งหมด", href: "/watch" },
+              { label: "Apple Watch Series 9", href: "/apple-watch-9" },
+              { label: "Ultra 2", href: "/ultra-2" },
+              { label: "Bands", href: "/bands" },
             ]}
             rows2={[
-              { label: 'Apple Watch SE', href: '/apple-watch-se' },
-              { label: 'Apple Watch Series 8', href: '/apple-watch-8' },
+              { label: "Apple Watch SE", href: "/apple-watch-se" },
+              { label: "Apple Watch Series 8", href: "/apple-watch-8" },
             ]}
             rows3={[
-              { label: 'บริการช่วยเหลือสำหรับ Watch', href: '/support/watch' },
-              { label: 'AppleCare+ สำหรับ Watch', href: '/support/watch' },
-              { label: 'Apple Music', href: '/apple-music' },
+              { label: "บริการช่วยเหลือสำหรับ Watch", href: "/support/watch" },
+              { label: "AppleCare+ สำหรับ Watch", href: "/support/watch" },
+              { label: "Apple Music", href: "/apple-music" },
             ]}
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
@@ -293,7 +287,7 @@ export default function Header() {
                     ค้นหาขั้นสูง
                   </>
                 ),
-                href: '/search/advanced',
+                href: "/search/advanced",
               },
               {
                 label: (
@@ -302,7 +296,7 @@ export default function Header() {
                     อุปกรณ์เสริม
                   </>
                 ),
-                href: '/search/products',
+                href: "/search/products",
               },
               {
                 label: (
@@ -311,7 +305,7 @@ export default function Header() {
                     Airpods
                   </>
                 ),
-                href: '/search/store',
+                href: "/search/store",
               },
               {
                 label: (
@@ -320,7 +314,7 @@ export default function Header() {
                     Apple Intelligence
                   </>
                 ),
-                href: '/search/apple-music',
+                href: "/search/apple-music",
               },
               {
                 label: (
@@ -329,7 +323,7 @@ export default function Header() {
                     Apple Trade In
                   </>
                 ),
-                href: '/search/support',
+                href: "/search/support",
               },
             ]}
             rows2={[]}

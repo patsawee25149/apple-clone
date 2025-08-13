@@ -19,7 +19,7 @@ function getUsers(): User[] {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { emailOrPhone, password } = body;
+    const { emailOrPhone, password, rememberMe } = body; // ⭐ รับ rememberMe
 
     if (!emailOrPhone || !password) {
       return NextResponse.json(
@@ -29,8 +29,6 @@ export async function POST(request: NextRequest) {
     }
 
     const users = getUsers();
-
-    // Find user by email or phone
     const user = users.find(u => 
       u.email === emailOrPhone || u.phone === emailOrPhone
     );
@@ -42,7 +40,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return NextResponse.json(
@@ -51,15 +48,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create JWT token
+    // ⭐ ปรับ token expiration ตาม rememberMe
+    const tokenExpiration = rememberMe ? '30d' : '7d'; // จดจำ = 30 วัน, ไม่จดจำ = 7 วัน
+    const cookieMaxAge = rememberMe 
+      ? 30 * 24 * 60 * 60 * 1000  // 30 วัน
+      : 7 * 24 * 60 * 60 * 1000;  // 7 วัน
+
     const token = jwt.sign(
       { 
         userId: user.id, 
         email: user.email,
-        name: user.name 
+        name: user.name,
+        rememberMe: rememberMe // ⭐ เก็บข้อมูล rememberMe ใน token
       },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: tokenExpiration }
     );
 
     const response = NextResponse.json(
@@ -71,17 +74,18 @@ export async function POST(request: NextRequest) {
           lastname: user.lastname,
           email: user.email,
           country: user.country
-        }
+        },
+        rememberMe: rememberMe // ⭐ ส่งกลับไปด้วย
       },
       { status: 200 }
     );
 
-    // Set cookie
+    // ⭐ ตั้งค่า cookie ตาม rememberMe
     response.cookies.set('auth-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: cookieMaxAge // ⭐ อายุ cookie ตาม rememberMe
     });
 
     return response;
@@ -94,4 +98,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

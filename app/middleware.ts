@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 // Protected routes that require authentication
 const protectedRoutes = [
-  '/profile',
+  '/profile',    // ⭐ เพิ่มแล้ว
   '/orders',
   '/wishlist',
   '/settings',
@@ -23,17 +23,17 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('auth-token')?.value;
 
-  // Check if the route is protected
+  // ⭐ ตรวจสอบว่า route เป็น protected route หรือไม่
   const isProtectedRoute = protectedRoutes.some(route => 
     pathname.startsWith(route)
   );
   
-  // Check if the route is an auth route
+  // ⭐ ตรวจสอบว่า route เป็น auth route หรือไม่
   const isAuthRoute = authRoutes.some(route => 
     pathname.startsWith(route)
   );
 
-  // If it's a protected route
+  // ⭐ จัดการ Protected Routes
   if (isProtectedRoute) {
     if (!token) {
       // Redirect to signin if no token
@@ -45,7 +45,19 @@ export function middleware(request: NextRequest) {
 
     try {
       // Verify token
-      jwt.verify(token, JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET) as any;
+      
+      // ⭐ ตรวจสอบว่า token ใกล้หมดอายุหรือไม่ (สำหรับ rememberMe = false)
+      const now = Math.floor(Date.now() / 1000);
+      const tokenExp = decoded.exp;
+      const timeUntilExpiry = tokenExp - now;
+      
+      // ถ้า token เหลือเวลาน้อยกว่า 1 วัน และไม่ได้เลือก rememberMe
+      if (timeUntilExpiry < 86400 && !decoded.rememberMe) {
+        // อาจจะแสดง warning หรือ auto-refresh token
+        console.log('Token expiring soon for user:', decoded.userId);
+      }
+      
       return NextResponse.next();
     } catch {
       // Invalid token, redirect to signin
@@ -66,7 +78,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // If it's an auth route and user is already logged in
+  // ⭐ จัดการ Auth Routes (signin, signup)
   if (isAuthRoute && token) {
     try {
       jwt.verify(token, JWT_SECRET);
@@ -83,9 +95,10 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// ⭐ Config ต้องอยู่ท้ายไฟล์
 export const config = {
   matcher: [
-    '/profile/:path*',
+    '/profile/:path*',  // ⭐ เพิ่มแล้ว
     '/orders/:path*',
     '/wishlist/:path*',
     '/settings/:path*',

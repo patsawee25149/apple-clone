@@ -7,9 +7,13 @@ interface DropdownMenuProps {
   label: React.ReactNode;
   id: string;
   header: { label: string; href?: string }[];
-  rows1: { label: React.ReactNode; href?: string  }[];
-  rows2: { label: React.ReactNode; href?: string }[];
-  rows3: { label: React.ReactNode; href?: string }[];
+  rows1: {
+    label: React.ReactNode;
+    href?: string;
+    onClick?: () => void;
+  }[];
+  rows2: { label: React.ReactNode; href?: string; onClick?: ()=> void; }[];
+  rows3: { label: React.ReactNode; href?: string; onClick?: ()=> void; }[];
   activeMenu: string | null;
   setActiveMenu: (label: string | null) => void;
 }
@@ -34,14 +38,16 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         onMouseLeave={() => setActiveMenu(null)}
         className={`
           fixed left-0 w-screen bg-white shadow-lg transition-all duration-300 z-50
-          ${activeMenu === id
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-3 pointer-events-none"
+          ${
+            activeMenu === id
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-3 pointer-events-none"
           }
           ${id === "search" ? "mt-2" : "mt-4"}
         `}
       >
-        <div className={`
+        <div
+          className={`
           max-w-screen  px-10 py-6 
           ${id === "cart" ? "pb-16" : ""}
           
@@ -55,63 +61,53 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           lg:grid-cols-3 lg:gap-6 lg:px-[300px] lg:ml-[10px] md:ml-[200px]
           
           items-start text-black
-        `}>
-          
+        `}
+        >
           {/* Column 1 */}
-          <div className={`
-            ${id === "search" ? "col-span-full md:col-span-2 lg:col-span-1 md:-ml-20" : ""}
-          `}>
+          <div
+            className={`
+            ${
+              id === "search"
+                ? "col-span-full md:col-span-2 lg:col-span-1 md:-ml-20"
+                : ""
+            }
+          `}
+          >
             <ul className="space-y-2">
               <li className="mb-3 lg:mb-5">
-                <p className={`
+                <p
+                  className={`
                   font-semibold
-                  ${id === "cart" 
-                    ? "text-lg md:text-xl w-[150px] md:w-[200px] lg:w-[250px] md:-ml-20" 
-                    : "text-sm md:text-base text-black"}
-                `}>
+                  ${
+                    id === "cart"
+                      ? "text-lg md:text-xl w-[150px] md:w-[200px] lg:w-[250px] md:-ml-20 "
+                      : "text-sm md:text-base text-black"
+                  }
+                `}
+                >
                   {header[0]?.label}
                 </p>
               </li>
 
               {rows1.map((item, idx) => (
-                <li key={idx} className={`
-                  text-sm md:text-base
-                  ${id === "cart" && idx === 0 
-                    ? "pt-6 md:pt-8 lg:pt-10 md:w-[550px] lg:w-[550px] md:-ml-20" 
-                    : ""
-                  }
-                  ${id === "search" && idx === 0 
-                    ? "mb-4" 
-                    : ""
-                  }
-                `}>
-                  {item.href ? (
-                    <Link 
-                      href={item.href} 
-                      className={`
-                        hover:text-blue-500 transition-colors block
-                        ${id === "cart" 
-                          ? "text-sm md:text-base md:w-[550px] md:-ml-20 flex items-center" 
-                          : "flex items-center"
-                        }
-                        ${id === "search" 
-                          ? "font-bold text-sm md:w-[550px] md:text-base" 
-                          : "right-20  "
-                        }
-                      `}
+                <li key={idx} className={`...existing classes...`}>
+                  {item.onClick ? (
+                    <span
+                      onClick={item.onClick}
+                      className="hover:text-blue-500 transition-colors block cursor-pointer flex items-start  w-[300px] md:w-[200px] lg:w-[250px] md:-ml-20"
+                    >
+                      {item.label}
+                    </span>
+                  ) : item.href ? (
+                    <Link
+                      href={item.href}
+                      className={`hover:text-blue-500  transition-colors flex  items-center w-[300px]
+                        ${id === "cart" ? "-translate-x-20" : ""}`}
                     >
                       {item.label}
                     </Link>
                   ) : (
-                    <span className={`
-                      cursor-default block
-                      ${id === "search" && idx === 0 
-                        ? "w-full" 
-                        : ""
-                      }
-                    `}>
-                      {item.label}
-                    </span>
+                    <span className="cursor-default block">{item.label}</span>
                   )}
                 </li>
               ))}
@@ -119,21 +115,23 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           </div>
 
           {/* Column 2 - Hidden on mobile for search, visible for others */}
-          <div className={`
-            ${id === "search" 
-              ? "hidden lg:block" 
-              : "block"
-            }
-          `}>
+          <div
+            className={`
+            ${id === "search" ? "hidden lg:block" : "block"}
+          `}
+          >
             <ul className="space-y-2">
               <li className="mb-3 lg:mb-4">
-                <p className={`
+                <p
+                  className={`
                   font-semibold
-                  ${id === "cart" 
-                    ? "text-lg md:text-xl" 
-                    : "text-sm md:text-base text-black"
+                  ${
+                    id === "cart"
+                      ? "text-lg md:text-xl"
+                      : "text-sm md:text-base text-black"
                   }
-                `}>
+                `}
+                >
                   {header[1]?.label}
                 </p>
               </li>
@@ -141,8 +139,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               {rows2.map((item, idx) => (
                 <li key={idx} className="text-sm md:text-base">
                   {item.href ? (
-                    <Link 
-                      href={item.href} 
+                    <Link
+                      href={item.href}
                       className="hover:text-blue-500 transition-colors block md:w-screen md:flex flex"
                     >
                       {item.label}
@@ -156,21 +154,27 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           </div>
 
           {/* Column 3 - Hidden on mobile and tablet for search */}
-          <div className={`
-            ${id === "search" 
-              ? "hidden lg:block" 
-              : "block md:col-span-2 lg:col-span-1"
+          <div
+            className={`
+            ${
+              id === "search"
+                ? "hidden lg:block"
+                : "block md:col-span-2 lg:col-span-1"
             }
-          `}>
+          `}
+          >
             <ul className="space-y-2">
               <li className="mb-3 lg:mb-4">
-                <p className={`
+                <p
+                  className={`
                   font-semibold
-                  ${id === "cart" 
-                    ? "text-lg md:text-xl" 
-                    : "text-sm md:text-base text-black"
+                  ${
+                    id === "cart"
+                      ? "text-lg md:text-xl"
+                      : "text-sm md:text-base text-black"
                   }
-                `}>
+                `}
+                >
                   {header[2]?.label}
                 </p>
               </li>
@@ -178,8 +182,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               {rows3.map((item, idx) => (
                 <li key={idx} className="text-sm md:text-base flex w-full">
                   {item.href ? (
-                    <Link 
-                      href={item.href} 
+                    <Link
+                      href={item.href}
                       className="hover:text-blue-500 transition-colors block md:w-screen md:flex md:-ml-3 flex -ml-2 "
                     >
                       {item.label}
