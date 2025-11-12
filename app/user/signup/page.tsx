@@ -1,74 +1,92 @@
+// app/user/signup/page.tsx
 'use client';
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaApple } from 'react-icons/fa';
 import { FloatingInput } from '@/app/function/FloatingInput';
 import { FloatingSelect } from '@/app/function/FloatingSelect';
 import { countries } from '@/app/data/countries';
-import { dates, months, years } from '@/app/data/date'; // adjust path as needed
-// adjust path as needed
+import { dates, months, years } from '@/app/data/date';
+import { useAuth } from '@/app/lib/auth-context';
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect';
 
 export default function SignUp() {
-  const router = useRouter();
+  const { signup } = useAuth();
+  const { loading: authLoading } = useAuthRedirect();
+  
   const [formData, setFormData] = useState({
     name: '',
     lastname: '',
-    country: 'ประเทศไทย',
+    country: 'TH',
     dates: '',
-    months : '',
+    months: '',
     years: '',
     email: '',
     password: '',
     confirmPassword: '',
     phone: '',
   });
-  const [error, setError] = useState('');
   
-
-  // ข
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
+    // Validation
     if (formData.password !== formData.confirmPassword) {
-      console.error('Passwords do not match');
       setError('รหัสผ่านไม่ตรงกัน');
       return;
     }
 
-    try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          lastname: formData.lastname,
-          country: formData.country,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-          dates: formData.dates,
-          months: formData.months,
-          years: formData.years,
-          birthday: `${formData.dates}-${formData.months}-${formData.years}`,
-        }),
-      });
+    if (formData.password.length < 6) {
+      setError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+      return;
+    }
 
-      if (response.ok) {
-        router.push('/user/signin');
+    if (!formData.dates || !formData.months || !formData.years) {
+      setError('กรุณาเลือกวันเกิดให้ครบถ้วน');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await signup({
+        name: formData.name,
+        lastname: formData.lastname,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        country: formData.country,
+        dates: formData.dates,
+        months: formData.months,
+        years: formData.years,
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก');
       } else {
-        const data = await response.json();
-        console.error('Signup error:', data);
-        setError(data.message || 'เกิดข้อผิดพลาด');
+        setError('เกิดข้อผิดพลาดในการสมัครสมาชิก');
       }
-    } catch (err) {
-      console.error('Error during signup:', err);
-      setError('ไม่สามารถสร้างบัญชีได้');
+    } finally {
+      setLoading(false);
     }
   };
+
+  const updateField = (field: keyof typeof formData) => (value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Show loading spinner while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex justify-center bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -81,7 +99,7 @@ export default function SignUp() {
 
         <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="text-red-500 text-center text-sm bg-red-50 p-3 rounded-lg">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
@@ -93,7 +111,7 @@ export default function SignUp() {
               label="ชื่อ"
               type="text"
               value={formData.name}
-              onChange={(value) => setFormData({ ...formData, name: value })}
+              onChange={updateField('name')}
               required
               autoComplete="given-name"
               className="flex-1"
@@ -104,9 +122,7 @@ export default function SignUp() {
               label="นามสกุล"
               type="text"
               value={formData.lastname}
-              onChange={(value) =>
-                setFormData({ ...formData, lastname: value })
-              }
+              onChange={updateField('lastname')}
               required
               autoComplete="family-name"
               className="flex-1"
@@ -118,22 +134,19 @@ export default function SignUp() {
             id="country"
             label="ประเทศ/ภูมิภาค"
             value={formData.country}
-            onChange={(value) => setFormData({ ...formData, country: value })}
+            onChange={updateField('country')}
             options={countries}
             required
           />
 
           {/* วันเกิด */}
-
-          <div className="grid grid-cols-3 space-y-4 gap-4 sm:space-y-0 sm:flex-row sm:space-x-4">
+          <div className="grid grid-cols-3 gap-4">
             <FloatingSelect
               id="dates"
               label="วัน"
               options={dates}
               value={formData.dates}
-              onChange={(value) =>
-                setFormData({ ...formData, dates: value })
-              }
+              onChange={updateField('dates')}
               required
             />
 
@@ -142,9 +155,7 @@ export default function SignUp() {
               label="เดือน"
               options={months}
               value={formData.months}
-              onChange={(value) =>
-                setFormData({ ...formData, months: value })
-              }
+              onChange={updateField('months')}
               required
             />
 
@@ -153,9 +164,7 @@ export default function SignUp() {
               label="ปี"
               options={years}
               value={formData.years}
-              onChange={(value) =>
-                setFormData({ ...formData, years: value })
-              }
+              onChange={updateField('years')}
               required
             />
           </div>
@@ -163,10 +172,10 @@ export default function SignUp() {
           {/* อีเมล */}
           <FloatingInput
             id="email"
-            label="อีเมลหรือเบอร์โทรศัพท์"
+            label="อีเมล"
             type="email"
             value={formData.email}
-            onChange={(value) => setFormData({ ...formData, email: value })}
+            onChange={updateField('email')}
             required
             autoComplete="email"
           />
@@ -174,10 +183,10 @@ export default function SignUp() {
           {/* เบอร์โทรศัพท์ */}
           <FloatingInput
             id="phone"
-            label="เบอร์โทรศัพท์"
+            label="เบอร์โทรศัพท์ (ไม่จำเป็น)"
             type="tel"
             value={formData.phone}
-            onChange={(value) => setFormData({ ...formData, phone: value })}
+            onChange={updateField('phone')}
             autoComplete="tel"
           />
 
@@ -187,7 +196,7 @@ export default function SignUp() {
             label="รหัสผ่าน"
             type="password"
             value={formData.password}
-            onChange={(value) => setFormData({ ...formData, password: value })}
+            onChange={updateField('password')}
             required
             autoComplete="new-password"
           />
@@ -198,9 +207,7 @@ export default function SignUp() {
             label="ยืนยันรหัสผ่าน"
             type="password"
             value={formData.confirmPassword}
-            onChange={(value) =>
-              setFormData({ ...formData, confirmPassword: value })
-            }
+            onChange={updateField('confirmPassword')}
             required
             autoComplete="new-password"
           />
@@ -208,9 +215,17 @@ export default function SignUp() {
           {/* ปุ่มสมัครสมาชิก */}
           <button
             type="submit"
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+            disabled={loading}
+            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            สร้างบัญชี
+            {loading ? (
+              <div className="flex items-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                กำลังสร้างบัญชี...
+              </div>
+            ) : (
+              'สร้างบัญชี'
+            )}
           </button>
 
           {/* ลงชื่อเข้าใช้ด้วย Apple */}

@@ -20,11 +20,9 @@ body {
   font-family: var(--font-prompt), Arial, Helvetica, sans-serif; /* แก้ไขบรรทัดนี้ */
 }
 
-h1 {
-  @apply text-blue-500
-}
-
 /* เพิ่มการบังคับใช้ font */
 * {
   font-family: var(--font-prompt), sans-serif;
 }
+
+
