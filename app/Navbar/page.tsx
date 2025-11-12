@@ -115,7 +115,7 @@ export default function Header() {
         {
           label: (
             <>
-              <FiUser className="relative mr-2 " />
+              <FiUser className=" mr-2 " />
               โปรไฟล์ของฉัน
             </>
           ),
@@ -124,7 +124,7 @@ export default function Header() {
         {
           label: (
             <>
-              <FiBox className="relative mr-2 " />
+              <FiBox className="mr-2 " />
               คำสั่งซื้อ
             </>
           ),
@@ -133,7 +133,7 @@ export default function Header() {
         {
           label: (
             <>
-              <VscHeart className="relative mr-2 " />
+              <VscHeart className="mr-2 " />
               บันทึกของคุณ
             </>
           ),
@@ -165,9 +165,9 @@ export default function Header() {
   const cartContent = getCartDropdownContent();
 
   return (
-    <header className="w-full z-50 flex relative bg-gray-50">
+    <header className="w-full z-50 flex relative bg-gray-50 right-10">
       <div className="max-w-screen-xl mx-auto flex justify-center p-5">
-        <Link href="/" className="text-xl font-bold left-[550px]">
+        <Link href="/" className="text-xl font-bold ">
           MyStore
         </Link>
 

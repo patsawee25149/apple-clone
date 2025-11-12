@@ -1,0 +1,100 @@
+"use client";
+import { FloatingSelect } from "@/app/function/FloatingSelect";
+import React, { useState } from "react";
+import { phone } from "@/app/data/phone";
+import Image from "next/image";
+import { FaShippingFast } from "react-icons/fa";
+import { CiCirclePlus , CiSaveDown2 } from "react-icons/ci";
+import { PiShoppingBagOpenDuotone } from "react-icons/pi";
+
+export default function GadgetPage() {
+  const [formData, setFormData] = useState({
+    size: "I16",
+  });
+
+  const updateField = (field: keyof typeof formData) => (value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <div className="flex min-h-screen w-screen justify-center bg-white">
+      <section className="min-h-screen w-[500px] flex flex-col items-left p-20 bg-white space-y-10">
+        <p className="text-red-600 text-[18px]">ใหม่</p>
+        <h1 className="text-2xl font-bold mb-6">
+          เคสซิลิโคนสำหรับ iPhone 16 Pro Max พร้อม MagSafe - สีชมพูเข้มพีโอนี
+        </h1>
+        <p className="text-[18px] font-light">฿1990.00</p>
+
+        <FloatingSelect
+          id="size"
+          label="ขนาด"
+          value={formData.size}
+          onChange={updateField("size")}
+          options={phone}
+          required
+        />
+
+        <div className="border-t border-gray-300 pt-6">
+          <div>
+            <div className="-space-y-2">
+              <FaShippingFast className="text-[28px] bottom-1 relative inline mr-2" />
+              การจัดส่ง:
+              <span className="flex text-black font-light p-2">
+                1-2 สัปดาห์ บริการจัดส่งฟรี
+              </span>
+              <a
+                href=""
+                className="flex ml-10 text-blue-500 font-light hover:underline"
+              >
+                ดูวันส่งมอบสินค้า <CiCirclePlus className="text-[18px] m-1" />
+              </a>
+            </div>
+
+            <div className="mt-6 -space-y-2">
+              <PiShoppingBagOpenDuotone className="text-[28px] bottom-1 relative inline mr-2 " />
+              การรับสินค้า:
+              <a
+                href=""
+                className="flex ml-10 text-blue-500 font-light hover:underline"
+              >
+                ตรวจสอบความพร้อมในการจำหน่าย
+                <CiCirclePlus className="text-[18px] m-1 " />
+              </a>
+              <button className="mt-10 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer transition-colors text-[16px] font-light">
+                
+                เพิ่มลงในถุงช้อปปิ้ง
+              </button>
+            </div>
+
+            <div className=" border-gray-300 pt-6">
+              <span className=" relative inline mr-2">
+                ต้องการเวลาอีกหน่อยใช่หรือไม่
+              </span>
+              <p className="font-light">
+                เก็บรักษาตัวเลือกสินค้าทั้งหมดของคุณโดยการบันทึกอุปกรณ์นี้ไปยังบันทึกของคุณ
+                จากนั้นกลับมาดูภายหลังได้ตลอดเวลาและรับสินค้าด้วยตัวเองได้ทันทีต่อจากที่ค้างไว้
+              </p>
+
+              <div className="mt-4 text-blue-500 font-light">
+              
+              <a href="" className="flex text-blue-500 items-center font-light hover:underline"><CiSaveDown2 className="text-[18px] m-1"/>บันทึกเพื่อดำเนินการภายหลัง</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div>
+          <Image
+            className="mt-20"
+            src="/images/casewhite.jpeg"
+            width={500}
+            height={500}
+            alt="casewhite"
+          />
+        </div>
+      </section>
+    </div>
+  );
+}

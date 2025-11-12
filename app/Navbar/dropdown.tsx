@@ -94,20 +94,20 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                   {item.onClick ? (
                     <span
                       onClick={item.onClick}
-                      className="hover:text-blue-500 transition-colors block cursor-pointer flex items-start  w-[300px] md:w-[200px] lg:w-[250px] md:-ml-20"
+                      className="hover:text-blue-500 transition-colors block cursor-pointer flex items-start w-[300px] md:w-[200px] lg:w-[250px] md:-ml-20"
                     >
                       {item.label}
                     </span>
                   ) : item.href ? (
                     <Link
                       href={item.href}
-                      className={`hover:text-blue-500  transition-colors flex  items-center w-[300px]
+                      className={`hover:text-blue-500  transition-colors flex  w-[300px]
                         ${id === "cart" ? "-translate-x-20" : ""}`}
                     >
                       {item.label}
                     </Link>
                   ) : (
-                    <span className="cursor-default block">{item.label}</span>
+                    <span className="cursor-default block ">{item.label}</span>
                   )}
                 </li>
               ))}
