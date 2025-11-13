@@ -5,7 +5,8 @@ import { phone } from "@/app/data/phone";
 import Image from "next/image";
 import { FaShippingFast } from "react-icons/fa";
 import { CiCirclePlus , CiSaveDown2 } from "react-icons/ci";
-import { PiShoppingBagOpenDuotone } from "react-icons/pi";
+import { PiShoppingBagOpenDuotone , PiChatsCircle } from "react-icons/pi";
+import { MdConnectWithoutContact } from "react-icons/md";
 
 export default function GadgetPage() {
   const [formData, setFormData] = useState({
@@ -17,8 +18,8 @@ export default function GadgetPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-screen justify-center bg-white">
-      <section className="min-h-screen w-[500px] flex flex-col items-left p-20 bg-white space-y-10">
+    <div className="grid grid-cols-4 gap-4 min-h-screen w-screen justify-center bg-white">
+      <section className="col-start-2 col-end-3 min-h-screen w-[500px] flex flex-col items-left p-20 bg-white space-y-10">
         <p className="text-red-600 text-[18px]">ใหม่</p>
         <h1 className="text-2xl font-bold mb-6">
           เคสซิลิโคนสำหรับ iPhone 16 Pro Max พร้อม MagSafe - สีชมพูเข้มพีโอนี
@@ -75,23 +76,49 @@ export default function GadgetPage() {
                 จากนั้นกลับมาดูภายหลังได้ตลอดเวลาและรับสินค้าด้วยตัวเองได้ทันทีต่อจากที่ค้างไว้
               </p>
 
-              <div className="mt-4 text-blue-500 font-light">
+              <div className="mt-4 font-light border-t border-gray-300 pt-4">
               
               <a href="" className="flex text-blue-500 items-center font-light hover:underline"><CiSaveDown2 className="text-[18px] m-1"/>บันทึกเพื่อดำเนินการภายหลัง</a>
+
+              <p className="flex items-center m-1"><PiChatsCircle className="text-[18px]" />รับความช่วยเหลือเกี่ยวกับการซื้อ</p>
+              <div className="flex items-center m-1">
+              <a href="" className="text-blue-500 flex hover:underline ">แชทสดตอนนี้ <MdConnectWithoutContact className="mx-1" /> </a> <span className="text-black">หรือโทร. 1800-01-9209</span>
+              </div>
+              
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section>
+
+      <section className="top-20 right-20">
+        <section>
         <div>
           <Image
-            className="mt-20"
+            className="mt-20 col-span-2 col-end-7"
             src="/images/casewhite.jpeg"
             width={500}
             height={500}
             alt="casewhite"
+            
+          />
+        </div>
+      </section>
+
+      </section>
+        
+      <section className="col-start-2 col-end-3 min-h-screen w-[500px] flex flex-col items-left pl-20 bg-white">
+          <div className="flex w-[800px] items-center justify-center">
+            <p className="mt-20 text-[16px] font-light">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi iste dolorem corporis minima praesentium accusamus delectus! Maxime ex laborum soluta?
+            </p>
+          <Image
+            className="mt-10 object-contain w-[1000px] h-[400px]"
+            src="/images/casegadget.jpg"
+            width={1400}
+            height={500}
+            alt="casegadget"
           />
         </div>
       </section>

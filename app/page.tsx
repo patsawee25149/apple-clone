@@ -417,7 +417,8 @@ export default function MainPage() {
     className="flex gap-6 overflow-x-auto scroll-smooth py-5 no-scrollbar px-[100px]"
   >
     {gadgets.map((card) => (
-      <div
+      <Link
+      href={'/products/gadget'} //ต้องมาเปลี่ยนเป็น card.id เมื่อทำหน้า detail เสร็จ
         key={card.id}
         className="w-[300px] h-[500px] rounded-xl shadow-lg hover:shadow-lg transition-all duration-600 hover:scale-105 relative bg-white flex-shrink-0"
       >
@@ -438,7 +439,7 @@ export default function MainPage() {
             </p>
           </div>
         </div>
-      </div>
+      </Link>
     ))}
   </div>
 </div>
