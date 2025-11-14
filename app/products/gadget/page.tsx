@@ -18,8 +18,8 @@ export default function GadgetPage() {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-4 min-h-screen w-screen justify-center bg-white">
-      <section className="col-start-2 col-end-3 min-h-screen w-[500px] flex flex-col items-left p-20 bg-white space-y-10">
+    <div className="grid grid-cols-6 gap-10 min-h-screen justify-center bg-white">
+      <section className=" min-h-screen col-span-2 col-start-2 min-w-[450px] flex flex-col p-20 bg-white space-y-10">
         <p className="text-red-600 text-[18px]">ใหม่</p>
         <h1 className="text-2xl font-bold mb-6">
           เคสซิลิโคนสำหรับ iPhone 16 Pro Max พร้อม MagSafe - สีชมพูเข้มพีโอนี
@@ -92,11 +92,11 @@ export default function GadgetPage() {
       </section>
 
 
-      <section className="top-20 right-20">
+      <section className="top-20 right-20 col-start-4 col-span-2 w-[500px] bg-white">
         <section>
         <div>
           <Image
-            className="mt-20 col-span-2 col-end-7"
+            className="mt-20"
             src="/images/casewhite.jpeg"
             width={500}
             height={500}
@@ -108,19 +108,21 @@ export default function GadgetPage() {
 
       </section>
         
-      <section className="col-start-2 col-end-3 min-h-screen w-[500px] flex flex-col items-left pl-20 bg-white">
-          <div className="flex w-[800px] items-center justify-center">
+      <section className="col-start-2 flex flex-col p-20 bg-white">
+          <div className="flex w-[500px] items-center justify-center">
             <p className="mt-20 text-[16px] font-light">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi iste dolorem corporis minima praesentium accusamus delectus! Maxime ex laborum soluta?
             </p>
-          <Image
-            className="mt-10 object-contain w-[1000px] h-[400px]"
+        </div>
+      </section>
+      <section className="top-20 col-start-4 col-span-2  bg-white">
+        <Image
+            className="mt-10  w-auto h-auto"
             src="/images/casegadget.jpg"
-            width={1400}
+            width={1000}
             height={500}
             alt="casegadget"
           />
-        </div>
       </section>
     </div>
   );
