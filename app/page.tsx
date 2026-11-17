@@ -1,9 +1,13 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { RiArrowRightUpLine } from "react-icons/ri";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useMenu } from "./function/MenuContext";
+import { gadgets } from "./data/gadgets";
+import Image from "next/image";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useAuth } from "@/app/lib/auth-context";
 
 const products = [
   {
@@ -129,46 +133,73 @@ const services = [
   },
 ];
 
-const gadgets = [
-  {
-    id: 1,
-    img: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/homepod-mini-select-orange-202110?wid=400&hei=400&fmt=jpeg&qlt=90&.v=K2c3bEwyaWVDeDZkdHpLbHkwcGVSckhndCtsZnAwTnFpWXhSS0Y4SW9oQXhNY0EwcmJVRnhWZldVZU9DRFJLSC85S3R4M0M3WGhIQVNOK3lBdUI5K1pDMDFGR3N1a0NhQ0RkTFYxMXBYTTNMQ2gzYU14VEs0V1BFdWdmdWl3NGg",
-    title: "Homepod mini (Orange)",
-    price: "฿3890.00 บาท",
-  },
-  {
-    id: 2,
-    img: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MDGW4?wid=400&hei=400&fmt=jpeg&qlt=90&.v=Tkx3UkpiL1M0cTVYY2dtczRQRTJtUFlvYS9naDJJdU9KTWdGWjhKWFRmS1ZGS1d3SDlTVjBOQWIxNCszUkpvN3UreXJpb3VIcGlWM2ZmZTdPd3hXVXc",
-    title: "เคสซิลิโคนสำหรับ iPhone 16 Pro Max พร้อม MagSafe",
-    price: "฿1990.00",
-  },
-  {
-    id: 3,
-    img: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MA6A4?wid=400&hei=400&fmt=jpeg&qlt=90&.v=VTNNNjYvY0NlYW93ZHNFayszWjV6UFlvYS9naDJJdU9KTWdGWjhKWFRmS2FaWlZhYmRJcVJ0dFIzcGxndUF1TjRubXdSK2ZZdzhtdG9KOTZmd0ltdHc",
-    title: "เคสใสสำหรับ iPhone 16 Pro Max พร้อม MagSafe",
-    price: "฿1990.00",
-  },
-  {
-    id: 4,
-    img: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/HS5E2?wid=400&hei=400&fmt=jpeg&qlt=90&.v=VkQvMnFYRVVUWkoyUWhzTW1rUmhhdllvYS9naDJJdU9KTWdGWjhKWFRmSXlKSlRUNldZSm4wTFl2OFVHMm9rVVJsa0w4SzBUZi82ZDhTTG9uL2lMTWc",
-    title: "PopSockets Magsafe Grip สำหรับ iPhone - สีสตรอเบอร์รี่",
-    price: "฿890.00",
-  },
-  {
-    id: 5,
-    img: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MA6X4?wid=400&hei=400&fmt=jpeg&qlt=90&.v=dWs1UjJIamRxejBLUjlKbG9MUDA2dllvYS9naDJJdU9KTWdGWjhKWFRmTGxYTDhKZXEyMzZPZ0kxNXNId1hlcTZ5Q1Zra3F4ZjFoUk1nS0pra0RaR2c",
-    title: "เคสผ้า FineWoven แบบกระเป๋าสตางค์สำหรับ iPhone พร้อม MagSafe",
-    price: "฿2990.00",
-  },
-];
 
 export default function MainPage() {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  const [wishlist, setWishlist] = useState<number[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
+  useEffect(() => {
+    if (user?.email) {
+      fetch("/api/wishlist")
+        .then((r) => r.ok ? r.json() : Promise.reject())
+        .then((data) => setWishlist(data.wishlist || []))
+        .catch(() => {
+          const local = localStorage.getItem("wishlist");
+          if (local) setWishlist(JSON.parse(local));
+        });
+    } else {
+      const local = localStorage.getItem("wishlist");
+      if (local) setWishlist(JSON.parse(local));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user?.email) localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist, user]);
+
+  const toggleWishlist = async (event: React.MouseEvent, id: number) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const next = wishlist.includes(id)
+      ? wishlist.filter((x) => x !== id)
+      : [...wishlist, id];
+
+    setWishlist(next);
+
+    if (!user?.email) return;
+
+    setIsSaving(true);
+    const action = wishlist.includes(id) ? "remove" : "add";
+    try {
+      const res = await fetch("/api/wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setWishlist(data.wishlist || []);
+      } else {
+        setWishlist(next); // rollback (simple)
+      }
+    } catch {
+      setWishlist(next);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const scrollRef1 = useRef<HTMLDivElement>(null);
+  const scrollRef2 = useRef<HTMLDivElement>(null);
+  const scrollRef3 = useRef<HTMLDivElement>(null);
+  const scrollRef4 = useRef<HTMLDivElement>(null);
+
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: "left" | "right") => {
+    if (!ref.current) return;
     const amount = 320; // ปรับขนาดการเลื่อน
-    scrollRef.current.scrollBy({
+    ref.current.scrollBy({
       left: direction === "left" ? -amount : amount,
       behavior: "smooth",
     });
@@ -245,21 +276,21 @@ export default function MainPage() {
       <div className="relative max-w-[1440px] mx-auto px-4">
         {/* Navigation Buttons */}
         <button
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-1 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+          onClick={() => scroll(scrollRef1, "left")}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
         >
           <FiChevronLeft size={24} />
         </button>
         <button
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-1 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+          onClick={() => scroll(scrollRef1, "right")}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
         >
           <FiChevronRight size={24} />
         </button>
 
         {/* Scrollable Items */}
         <div
-          ref={scrollRef}
+          ref={scrollRef1}
           className="flex gap-6 overflow-x-auto scroll-smooth py-4 px-2 no-scrollbar"
         >
           {products.map((product) => (
@@ -297,13 +328,13 @@ export default function MainPage() {
 
         {/* Navigation buttons */}
         <button
-          onClick={() => scroll("left")}
+          onClick={() => scroll(scrollRef2, "left")}
           className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
         >
           <FiChevronLeft size={35} />
         </button>
         <button
-          onClick={() => scroll("right")}
+          onClick={() => scroll(scrollRef2, "right")}
           className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
         >
           <FiChevronRight size={35} />
@@ -311,7 +342,7 @@ export default function MainPage() {
 
         {/* Scroll area */}
         <div
-          ref={scrollRef}
+          ref={scrollRef2}
           className="flex gap-6 overflow-x-auto scroll-smooth py-5 no-scrollbar px-[100px] scroll-smooth"
         >
           {cards.map((card) => (
@@ -320,11 +351,13 @@ export default function MainPage() {
               className="min-w-[380px] w-[70px] rounded-xl shadow-lg hover:shadow-lg transition-all duration-600 hover:scale-102 relative bg-white flex-shrink-0"
             >
               <div className="rounded-xl overflow-hidden w-full h-[500px]  hover:scale-105 duration-300 ">
-                <img
-                  src={card.img}
-                  alt=""
-                  className="object-cover w-full h-full transition-transform duration-300 "
-                />
+                  <Image
+                    src={card.img}
+                    alt=""
+                    width={400}
+                    height={400}
+                    className="object-cover w-full h-full transition-transform duration-300 "
+                  />
                 <div className="absolute top-0 left-0 w-full bg-gradient-to-t to-transparent p-4 text-black">
                   <h2 className={`text-2xl font-semibold pb-4 ${card.textColor}`}>
                     {card.title}
@@ -351,13 +384,13 @@ export default function MainPage() {
 
         {/* Navigation buttons */}
         <button
-          onClick={() => scroll("left")}
+          onClick={() => scroll(scrollRef3, "left")}
           className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
         >
           <FiChevronLeft size={35} />
         </button>
         <button
-          onClick={() => scroll("right")}
+          onClick={() => scroll(scrollRef3, "right")}
           className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
         >
           <FiChevronRight size={35} />
@@ -365,7 +398,7 @@ export default function MainPage() {
 
         {/* Scroll area */}
         <div
-          ref={scrollRef}
+          ref={scrollRef3}
           className="flex gap-6 overflow-x-auto scroll-smooth py-5 no-scrollbar px-[100px]"
         >
           {services.map((card) => (
@@ -374,11 +407,13 @@ export default function MainPage() {
               className="min-w-[500px] h-[500px] rounded-xl shadow-lg hover:shadow-lg transition-all duration-600 hover:scale-102 relative bg-white flex-shrink-0"
             >
               <div className="rounded-xl overflow-hidden w-full h-[500px]  hover:scale-105 duration-300 ">
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="object-cover w-full h-full transition-transform duration-400 hover:scale-105"
-                />
+                  <Image
+                    src={card.img}
+                    alt={card.title ?? ""}
+                    width={500}
+                    height={500}
+                    className="object-cover w-full h-full rounded-xl overflow-hidden max-h-full transition-transform duration-400 hover:scale-105"
+                  />
                 <div className="absolute top-0 left-0 w-full bg-gradient-to-t to-transparent p-4 text-black">
                   <p className={`text-sm pb-4 text-gray-500`}>{card.title}</p>
                   <h2 className={`text-3xl pb-4 `}>{card.description}</h2>
@@ -392,57 +427,70 @@ export default function MainPage() {
 
       {/* Gadgets Section */}
       <div className="relative mt-[150px] w-full scroll-smooth">
-  <h2 className="text-stone-500 text-4xl mb-10 ml-[150px]">
-    <span className="text-black">อุปกรณ์เสริม</span>{" "}
-    สิ่งที่ขาดไม่ได้ที่จับคู่อุปกรณ์โปรดของคุณได้อย่างลงตัว
-  </h2>
+      <h2 className="text-stone-500 text-4xl mb-10 ml-[150px]">
+        <span className="text-black">อุปกรณ์เสริม</span>{" "}
+        สิ่งที่ขาดไม่ได้ที่จับคู่อุปกรณ์โปรดของคุณได้อย่างลงตัว
+      </h2>
 
-  {/* Navigation buttons */}
-  <button
-    onClick={() => scroll("left")}
-    className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
-  >
-    <FiChevronLeft size={35} />
-  </button>
-  <button
-    onClick={() => scroll("right")}
-    className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
-  >
-    <FiChevronRight size={35} />
-  </button>
+      {/* Navigation buttons */}
+      <button
+        onClick={() => scroll(scrollRef4, "left")}
+        className="absolute top-1/2 left-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+      >
+        <FiChevronLeft size={35} />
+      </button>
+      <button
+        onClick={() => scroll(scrollRef4, "right")}
+        className="absolute top-1/2 right-4 -translate-y-1/2 z-10 bg-white shadow p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+      >
+        <FiChevronRight size={35} />
+      </button>
 
-  {/* Scroll area with padding both sides */}
-  <div
-    ref={scrollRef}
-    className="flex gap-6 overflow-x-auto scroll-smooth py-5 no-scrollbar px-[100px]"
-  >
-    {gadgets.map((card) => (
+      {/* Scroll area with padding both sides */}
+      <div
+        ref={scrollRef4}
+        className="flex gap-6 overflow-x-auto scroll-smooth py-5 no-scrollbar px-[100px]"
+      >
+        {gadgets.map((card) => (
       <Link
-      href={'/products/gadget'} //ต้องมาเปลี่ยนเป็น card.id เมื่อทำหน้า detail เสร็จ
+        href={`/products/gadget/${card.id}`}
         key={card.id}
         className="w-[300px] h-[500px] rounded-xl shadow-lg hover:shadow-lg transition-all duration-600 hover:scale-105 relative bg-white flex-shrink-0"
       >
         <div className="rounded-xl overflow-hidden w-full h-full">
           <img
-            src={card.img}
-            alt={card.title}
-            className="object-contain scale-80 pb-[200px] w-full h-full duration-400"
+        src={card.img}
+        alt={card.title}
+        className="object-contain scale-80 pb-[200px] w-full h-full duration-400"
           />
           <div className="absolute top-0 left-0 w-[250px] bg-gradient-to-t to-transparent p-4 text-black">
-            <div className="absolute mt-[360px] w-[220px]">
-              <p className="text-sm pb-4 font-semibold text-[16px] text-start overflow-hidden line-clamp-1 leading-tight">
-                {card.title}
-              </p>
-            </div>
-            <p className="ml-5 text-gray-600 mt-[430px] text-[16px]">
-              {card.price}
-            </p>
+        <div className="absolute mt-[360px] w-[220px]">
+          <p className="text-sm pb-4 font-semibold text-[16px] text-start overflow-hidden line-clamp-1 leading-tight">
+            {card.title}
+          </p>
+        </div>
+        <p className="ml-5 text-gray-600 mt-[430px] text-[16px]">
+          {card.price}
+        </p>
+
+{/* wishlisticons */}
+        {wishlist.includes(card.id) 
+  ? <FaHeart
+      className="text-[24px] absolute bottom-4 right-0 cursor-pointer text-red-500 hover:scale-120 transition-transform duration-300"
+      onClick={(e) => toggleWishlist(e, card.id)}
+    />
+  : <FaRegHeart
+      className="text-[24px] absolute bottom-4 right-0 cursor-pointer text-gray-400 hover:text-red-500 hover:scale-120 transition-transform duration-300"
+      onClick={(e) => toggleWishlist(e, card.id)}
+    />
+}
           </div>
+          
         </div>
       </Link>
-    ))}
-  </div>
-</div>
+        ))}
+      </div>
+    </div>
     </main>
   );
 }

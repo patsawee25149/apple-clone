@@ -37,7 +37,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       <div
         onMouseLeave={() => setActiveMenu(null)}
         className={`
-          fixed left-0 w-screen bg-white shadow-lg transition-all duration-300 z-50
+          fixed left-0 w-screen bg-white  shadow-lg transition-all duration-300 z-50
           ${
             activeMenu === id
               ? "opacity-100 translate-y-0"
@@ -48,7 +48,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       >
         <div
           className={`
-          max-w-screen  px-10 py-6 
+          max-w-screen  px-10 py-6  
           ${id === "cart" ? "pb-16" : ""}
           
           // Mobile (phone) - Stack vertically

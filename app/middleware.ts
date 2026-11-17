@@ -4,13 +4,21 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+console.log('JWT_SECRET loaded:', !!JWT_SECRET);
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in environment variables');
+}
+
+
+
 // Protected routes that require authentication
 const protectedRoutes = [
   '/profile',    // ⭐ เพิ่มแล้ว
   '/orders',
   '/wishlist',
   '/settings',
-  '/admin'
+  '/admin',
 ];
 
 // Auth routes that should redirect to home if user is already logged in

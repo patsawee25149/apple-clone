@@ -8,6 +8,9 @@
     "phone": "098-765-4322",
     "country": "Thailand",
     "birthday": "25-07-2002",
-    "createdAt": "2025-07-24T10:54:09.624Z"
+    "createdAt": "2025-07-24T10:54:09.624Z",
+    "wishlist": [
+      1
+    ]
   }
 ]
