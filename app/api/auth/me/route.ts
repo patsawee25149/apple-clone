@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
-import { findUserById, excludePassword } from '@/app/lib/user-utils'; // ⚠️ ต้องสร้างไฟล์นี้
+import { findUserById, excludePassword } from '@/app/lib/user-utils'; 
+import { JWT_SECRET } from '@/app/lib/auth-config'; 
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
 
 export async function GET(request: NextRequest) {
   try {

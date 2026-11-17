@@ -3,8 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
+import { JWT_SECRET } from '@/app/lib/auth-config';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 
 function getUsers(): User[] {

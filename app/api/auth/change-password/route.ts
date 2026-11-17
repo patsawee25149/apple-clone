@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { getUsers,saveUsers, User } from '@/app/lib/user-utils';
 import path from 'path';
+import { JWT_SECRET } from '@/app/lib/auth-config';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 
 export async function PUT(request: NextRequest) {
